@@ -45,6 +45,10 @@ if [ -f ".env" ]; then
     echo "Generating Laravel application key..."
     php artisan key:generate --force
   fi
+  GENERATED_KEY="$(grep '^APP_KEY=' .env | head -n 1 | cut -d '=' -f 2-)"
+  if [ -n "$GENERATED_KEY" ]; then
+    export APP_KEY="$GENERATED_KEY"
+  fi
 fi
 
 # Create storage symlink if not already linked
