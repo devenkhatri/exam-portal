@@ -47,6 +47,69 @@ A full-featured online MCQ examination and instant practice portal built with **
 
 ---
 
+## Quick Start with Docker (Recommended)
+
+Run the entire application stack (Laravel 12, Nginx, MySQL 8.0, and phpMyAdmin) in isolated containers without needing PHP, Composer, Node.js, or MySQL installed on your host machine.
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (macOS / Windows / Linux) with Docker Compose v2.
+
+### 1. Configure Environment
+
+Copy the Docker-tailored environment configuration:
+```bash
+cp .env.docker.example .env
+```
+
+### 2. Build and Start the Containers
+
+```bash
+docker compose up -d --build
+```
+> The container entrypoint will automatically install Composer packages, generate your `APP_KEY`, wait for the MySQL service health check, and set up the storage symlink.
+
+### 3. Initialize & Seed Database
+
+Run migrations and seed the demo subjects, questions, and sample user accounts:
+```bash
+docker compose exec app php artisan migrate --seed
+```
+
+### 4. Access the Application
+
+- **Web Application:** [http://localhost:8000](http://localhost:8000)
+- **phpMyAdmin (Database GUI):** [http://localhost:8080](http://localhost:8080)
+  - **Server:** `db`
+  - **Username:** `exam_user` (or `root`)
+  - **Password:** `secret` (or `root_secret`)
+- **MySQL Direct Access:** `localhost:3306`
+
+### 5. Useful Docker Commands
+
+```bash
+# View live application & container logs
+docker compose logs -f app
+
+# Run Artisan commands inside the app container
+docker compose exec app php artisan route:list
+docker compose exec app php artisan tinker
+
+# Run tests in container
+docker compose exec app php artisan test
+
+# Re-run frontend asset build if modified
+docker compose exec app npm run build
+
+# Stop containers
+docker compose down
+
+# Stop containers and remove database volume (fresh start)
+docker compose down -v
+```
+
+---
+
 ## Local Setup (XAMPP + MySQL)
 
 1. **Clone the repository**
